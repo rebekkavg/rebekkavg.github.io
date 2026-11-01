@@ -53,6 +53,9 @@
       m.setAttribute('data-cap', captionText(b));
     }
     m.style.setProperty('--r', b.ratio || '4/3');
+    var rn = (b.w && b.h) ? b.w / b.h : 4 / 3;
+    m.style.setProperty('--rn', rn.toFixed(4));
+    if (rn < 1) fig.classList.add('fig--tall');
     var fit = b.fit || o.fit;
     if (fit) m.style.setProperty('--fit', fit);
     if (b.pos) m.style.setProperty('--pos', b.pos);
@@ -142,77 +145,42 @@
     window.addEventListener('pageshow', function () { document.body.classList.remove('is-leaving'); });
   }
 
-  /* ---------- startpagina: projectenindex ---------- */
+  /* ---------- startpagina: drie projectkaarten naast elkaar ---------- */
   function renderIndex() {
     var list = $('#plist');
     if (!list || !window.PROJECTS) return;
-    var fine = window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:900px)');
-    var pv = $('.preview');
-    var items = [];
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, on = false;
-
-    function place(x, y) {
-      var w = pv.offsetWidth, h = pv.offsetHeight;
-      var nx = x + 32;
-      if (nx + w > window.innerWidth - 16) nx = x - w - 32;
-      tx = nx;
-      ty = Math.max(80, Math.min(window.innerHeight - h - 16, y - h / 2));
-    }
-    function loop() {
-      var k = reduce ? 1 : 0.18;
-      cx += (tx - cx) * k; cy += (ty - cy) * k;
-      pv.style.transform = 'translate3d(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,0)';
-      if (on || Math.abs(tx - cx) > 0.5 || Math.abs(ty - cy) > 0.5) raf = requestAnimationFrame(loop);
-      else raf = 0;
-    }
-    function show(i, x, y) {
-      items.forEach(function (n, k) { n.classList.toggle('on', k === i); });
-      place(x, y);
-      if (!on) { cx = tx; cy = ty; }
-      on = true;
-      pv.classList.add('on');
-      if (!raf) raf = requestAnimationFrame(loop);
-    }
-    function hide() { on = false; if (pv) pv.classList.remove('on'); }
 
     window.PROJECTS.forEach(function (p, i) {
       var li = el('li', 'reveal');
-      li.style.setProperty('--d', (i * 90) + 'ms');
-      var a = el('a', 'prow');
+      li.style.setProperty('--d', (i * 120) + 'ms');
+      var a = el('a', 'pcard');
       a.href = 'project.html?p=' + encodeURIComponent(p.slug);
+      var label = p.nummer + ' ' + p.titel + (p.kaartLabel ? ', ' + p.kaartLabel : '');
+      a.setAttribute('aria-label', label);
 
-      var im = figure({ src: p.hero.src, alt: p.hero.alt, ratio: '4/3', w: 1200, h: 900, zoom: false }, { cls: 'prow__img', nocap: true });
-      a.appendChild(im);
+      var k = p.kaart;
+      var fig;
+      if (k && k.src) {
+        fig = figure({ src: k.src, alt: k.alt || p.titel, ratio: '3/4', w: k.w || 1000, h: k.h || 1333, zoom: false }, { cls: 'pcard__img', nocap: true });
+      } else {
+        /* nog geen beeld: rustige placeholder */
+        fig = el('figure', 'fig pcard__img');
+        var ph = el('div', 'media is-missing');
+        ph.style.setProperty('--r', '3/4');
+        ph.setAttribute('data-name', p.kaartLabel || 'Binnenkort');
+        fig.appendChild(ph);
+      }
+      a.appendChild(fig);
 
-      var t = el('span', 'prow__title');
+      /* titel: verschijnt bij hover/focus (muis), altijd zichtbaar op touch */
+      var over = el('span', 'pcard__over');
+      var t = el('span', 'pcard__title');
       t.appendChild(el('b', 'num', p.nummer));
       t.appendChild(el('span', 'ttl', p.titel));
-      a.appendChild(t);
+      over.appendChild(t);
+      over.appendChild(el('span', 'pcard__meta label', p.kaartLabel || p.type));
+      a.appendChild(over);
 
-      var m = el('span', 'prow__meta label');
-      m.appendChild(document.createTextNode(p.jaar));
-      m.appendChild(document.createElement('br'));
-      m.appendChild(document.createTextNode(p.type));
-      a.appendChild(m);
-
-      if (pv) {
-        var src = p.voorbeeld || p.hero;
-        var pf = figure({ src: src.src, alt: src.alt, ratio: '4/3', w: 1200, h: 900, zoom: false }, { cls: 'preview__item', nocap: true });
-        pv.appendChild(pf);
-        items.push(pf);
-        a.addEventListener('pointerenter', function (e) {
-          if (e.pointerType === 'touch' || !fine.matches) return;
-          show(i, e.clientX, e.clientY);
-        });
-        a.addEventListener('pointermove', function (e) { if (on) place(e.clientX, e.clientY); });
-        a.addEventListener('pointerleave', hide);
-        a.addEventListener('focus', function () {
-          if (!fine.matches) return;
-          var r = a.getBoundingClientRect();
-          show(i, r.left + r.width * 0.6, r.top + r.height / 2);
-        });
-        a.addEventListener('blur', hide);
-      }
       li.appendChild(a);
       list.appendChild(li);
     });
@@ -236,7 +204,7 @@
       case 'tekeningen': {
         c = el('div', 'container');
         c.appendChild(textBlock(s.tekst));
-        var pr = el('div', 'pair');
+        var pr = el('div', 'pair' + (imgs.length === 1 ? ' pair--single' : ''));
         imgs.forEach(function (b, k) {
           rev(f = figure(b, { fit: s.layout === 'tekeningen' ? 'contain' : null }), k * 120);
           pr.appendChild(f);

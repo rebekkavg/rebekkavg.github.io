@@ -3,7 +3,7 @@
 Statische portfolio-website (HTML, CSS, vanilla JavaScript). Geen build-stap, geen npm. Werkt op GitHub Pages en gebruikt uitsluitend relatieve paden.
 
 ```
-index.html          startpagina (hero, projectenindex, over-teaser)
+index.html          startpagina (hero, drie projectkaarten, over-teaser)
 project.html        één sjabloon, laadt het project via ?p=slug
 about.html          over mij
 contact.html        contact (mailto)
@@ -26,49 +26,54 @@ python3 -m http.server 8000
 
 Ontbrekende afbeeldingen verschijnen als grijze (#99a5b5) placeholder met de verwachte bestandsnaam. Zo zie je meteen wat nog moet geplaatst worden.
 
-## 2. Afbeeldingen toevoegen
+## 2. Afbeeldingen
 
-Plaats de bestanden met **exact** deze namen in `assets/img/project-1/`:
+De foto's van project 1 en 2 zijn al verwerkt (WebP, geoptimaliseerd, plannen bijgesneden) en staan in `assets/img/project-1/` en `assets/img/project-2/`. Op de startpagina gebruikt elk project een staande kaartfoto (`kaart.webp`, verhouding 3:4).
+
+**Project 1: Samenleven in Rust** (`assets/img/project-1/`)
 
 | Bestand | Inhoud |
 |---|---|
-| `01-grid-bovenaanzicht.jpg` | opgegeven raster, bovenaanzicht |
-| `02-grid-isometrie.jpg` | opgegeven raster, isometrie |
-| `03-situering-schelde.jpg` | foto Schelde met kaai en skyline (wordt twee keer gebruikt, zie scène 2 en 3) |
-| `04-render-leefruimte.jpg` | verticale render: persoon bij raam, beige kolom, blauwgrijze wand (hoofdbeeld, slotbeeld en galerij) |
-| `05-render-slaapkamer.jpg` | render slaapkamer |
-| `06-render-keuken.jpg` | render keuken |
-| `07-render-leefruimte-2.jpg` | render leefruimte |
-| `08-grondplan-gelijkvloers.png` | grondplan gelijkvloers 1:150 |
-| `09-grondplan-eerste-verdieping.png` | grondplan eerste verdieping 1:50 |
-| `10-snede-aa.png` | snede AA' |
-| `11-snede-bb.png` | snede BB' |
+| `00-hoofdbeeld-eindresultaat.webp` | render eindresultaat (hoofdbeeld en slotbeeld) |
+| `01-grid-bovenaanzicht.webp`, `02-grid-isometrie.webp` | opgegeven raster |
+| `03-maquette-buitenaanzicht.webp` | maquette buitenaanzicht (scène 2) |
+| `04-maquette-lichtinval.webp` | maquette lichtinval (scène 3) |
+| `05-maquette-vide.webp` | maquette bovenniveau en vide (scène 4) |
+| `06-maquette-trap-tafel.webp` | maquette gemeenschappelijke ruimte (scène 5) |
+| `07-snede-aa.webp` | snede AA' |
+| `08-grondplan-gelijkvloers.webp`, `09-grondplan-eerste-verdieping.webp` | grondplannen |
+| `kaart.webp` | kaartbeeld op de startpagina |
+
+**Project 2: Onder invloed van Kunst** (`assets/img/project-2/`): `00-hoofdbeeld.webp` tot `12-maquette-gevel.webp` en `kaart.webp`; de volgorde staat in `js/projects.js`.
 
 Het portret komt in `assets/img/about.jpg`.
 
+**Het kaartbeeld op de startpagina wijzigen:** vervang `kaart.webp` van dat project, of pas `kaart: { src, alt, w, h }` aan in `js/projects.js`. Staat er `kaart: null`, dan toont de startpagina een grijze placeholder met `kaartLabel` (nu "Nog te bepalen" voor project 3).
+
 **Advies voor snelle laadtijd:**
-- Exporteer foto's en renders als JPG of WebP, maximaal 2400 px breed, kwaliteit 80–85%.
-- Exporteer plannen en snedes als PNG of SVG.
+- Exporteer foto's en renders als WebP of JPG, maximaal 2400 px breed, kwaliteit 80–85%.
+- Exporteer plannen en snedes als PNG, WebP of SVG.
 - Houd elk bestand onder ongeveer 500 KB.
+- Het eindresultaat van project 1 en de twee rasterafbeeldingen zijn klein (970 px en ca. 500 px breed). Heb je die in hogere resolutie, vervang ze dan onder dezelfde naam (pas `w` en `h` in `js/projects.js` aan).
 
 **Verhoudingen:** elk beeld heeft een `ratio` in `js/projects.js` (bv. `'4/3'`). Past een beeld niet mooi in zijn kader, pas dan enkel die waarde aan (`'3/2'`, `'16/9'`, `'2/3'`, ...). Met `fit: 'contain'` wordt een beeld volledig getoond (handig voor plannen), met `fit: 'cover'` vult het het kader. Met `pos: 'center 70%'` verschuif je het uitgesneden stuk.
 
-Wil je een andere afbeelding in scène 3 dan de Schelde-foto van scène 2? Vervang dan de `src` van dat beeld in `js/projects.js`.
+Een enkel beeld in een `paar`- of `tekeningen`-scène wordt automatisch breder getoond.
 
 ## 3. Projecten toevoegen of wijzigen
 
 Alles staat in `js/projects.js`. Je hoeft geen HTML aan te passen.
 
-**Project 2 of 3 invullen**
-1. Zoek in `js/projects.js` het blok `PLACEHOLDER PROJECT 2` (of 3).
-2. Pas `titel`, `vak`, `jaar`, `type`, `locatie` en `beschrijving` aan. Laat `slug` ongewijzigd, tenzij je ook de links in `index.html` (`<noscript>`) aanpast.
+**Project 3 invullen** (project 1 en 2 zijn al ingevuld)
+1. Zoek in `js/projects.js` het blok `PLACEHOLDER PROJECT 3`.
+2. Pas `titel`, `vak`, `jaar`, `type`, `locatie` en `beschrijving` aan. Laat `slug` ongewijzigd, tenzij je ook de link in het `<noscript>`-blok van `index.html` aanpast.
 3. Vervang in elke scène `tekst`, `alt` (beschrijving van het beeld) en `bijschrift`.
-4. Zet je afbeeldingen in `assets/img/project-2/` en pas de bestandsnamen (`src`) aan, of geef je bestanden de namen die al in de data staan:
-   `00-hoofdbeeld.jpg`, `01-vertrekpunt.jpg`, `02-plek.jpg`, `03-idee.jpg`, `04-indeling.jpg`, `04-detail.jpg`, `05-grondplan.png`, `05-snede.png`, `06-eindbeeld.jpg`.
+4. Zet je afbeeldingen in `assets/img/project-3/` en pas de bestandsnamen (`src`) aan, of geef je bestanden de namen die al in de data staan:
+   `00-hoofdbeeld.jpg`, `01-vertrekpunt.jpg`, `02-plek.jpg`, `03-idee.jpg`, `04-indeling.jpg`, `04-detail.jpg`, `05-grondplan.png`, `05-snede.png`, `06-eindbeeld.jpg`. Voeg ook een `kaart` toe (zie hierboven) en verwijder `kaartLabel`.
 5. Houd de verhaallogica aan: vertrekpunt → plek/context → idee → indeling → detail → tekeningen → eindbeeld. Scènes toevoegen of verwijderen mag. De teller ("01 / 06") past zich automatisch aan.
 
 **Een vierde project toevoegen**
-Kopieer een volledig projectblok, plak het achter het laatste (met een komma ertussen) en geef het een nieuwe `slug`, bv. `'project-4'`. Het verschijnt automatisch in de index en in de cyclus "Volgend project". Voeg eventueel een regel toe aan het `<noscript>`-lijstje in `index.html`.
+Kopieer een volledig projectblok, plak het achter het laatste (met een komma ertussen) en geef het een nieuwe `slug`, bv. `'project-4'`. Het verschijnt automatisch als vierde kaart (de rij is gemaakt voor drie; voor een vierde kaart zet je in `css/style.css` bij `.pcards` `repeat(4,1fr)`) en in de cyclus "Volgend project". Voeg eventueel een regel toe aan het `<noscript>`-lijstje in `index.html`.
 
 **Layouts per scène** (`layout`):
 
@@ -105,8 +110,9 @@ Een `tekst` mag een tekenreeks zijn of een lijst van alinea's (`['alinea 1', 'al
 
 ## 5. Nog zelf in te vullen
 
-- [ ] Alle afbeeldingen van project 1 (zie tabel) en het portret `about.jpg`
-- [ ] Project 2 en project 3: titel, teksten, beelden, metadata
+- [ ] Het portret `about.jpg`
+- [ ] Project 3: titel, teksten, beelden, metadata en kaartbeeld
+- [ ] Optioneel: een situatiefoto of -plan voor project 1 (scène 2 en 3) en hoger-resolutie eindbeeld
 - [ ] E-mailadres controleren (`rebekka.groeneveld@student.uantwerpen.be`) in `contact.html`, de footer en het mobiele menu van elke pagina
 - [ ] LinkedIn en Instagram in `contact.html` (nu platte tekst als placeholder)
 - [ ] Software-lijst in `about.html`
