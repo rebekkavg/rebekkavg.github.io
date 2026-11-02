@@ -52,7 +52,7 @@
       m.setAttribute('data-alt', b.alt);
       m.setAttribute('data-cap', captionText(b));
     }
-    m.style.setProperty('--r', b.ratio || '4/3');
+    m.style.setProperty('--r', b.crop || ((b.w && b.h) ? b.w + '/' + b.h : (b.ratio || '4/3')));
     var rn = (b.w && b.h) ? b.w / b.h : 4 / 3;
     m.style.setProperty('--rn', rn.toFixed(4));
     if (rn < 1) fig.classList.add('fig--tall');
@@ -110,21 +110,9 @@
     window.addEventListener('resize', function () { if (window.innerWidth >= 600) set(false); });
   }
 
-  /* ---------- klok + jaartal ---------- */
+  /* ---------- jaartal ---------- */
   function initClock() {
     $$('[data-year]').forEach(function (n) { n.textContent = new Date().getFullYear(); });
-    var els = $$('[data-clock]');
-    if (!els.length) return;
-    var f;
-    try {
-      f = new Intl.DateTimeFormat('nl-BE', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Brussels' });
-    } catch (e) { return; }
-    function tick() {
-      var t = f.format(new Date());
-      els.forEach(function (n) { n.textContent = 'Antwerpen ' + t; });
-    }
-    tick();
-    setInterval(tick, 15000);
   }
 
   /* ---------- paginatransities (eenvoudige fade) ---------- */
@@ -161,7 +149,7 @@
       var k = p.kaart;
       var fig;
       if (k && k.src) {
-        fig = figure({ src: k.src, alt: k.alt || p.titel, ratio: '3/4', w: k.w || 1000, h: k.h || 1333, zoom: false }, { cls: 'pcard__img', nocap: true });
+        fig = figure({ src: k.src, alt: k.alt || p.titel, crop: '3/4', w: k.w || 1000, h: k.h || 1333, zoom: false }, { cls: 'pcard__img', nocap: true });
       } else {
         /* nog geen beeld: rustige placeholder */
         fig = el('figure', 'fig pcard__img');
@@ -193,8 +181,12 @@
     return d;
   }
 
+  function labelBlock(t) {
+    return rev(el('p', 'label scene__label', t));
+  }
+
   function scene(s, i, p) {
-    var sec = el('section', 'scene scene--' + s.layout);
+    var sec = el('section', 'scene scene--' + s.layout + ((s.donker || s.layout === 'donker') ? ' is-dark' : ''));
     sec.setAttribute('data-scene', i + 1);
     var imgs = s.beelden || [];
     var c, g, mc, f;
@@ -203,13 +195,23 @@
       case 'paar':
       case 'tekeningen': {
         c = el('div', 'container');
-        c.appendChild(textBlock(s.tekst));
-        var pr = el('div', 'pair' + (imgs.length === 1 ? ' pair--single' : ''));
+        if (s.label) c.appendChild(labelBlock(s.label));
+        if (s.tekst) c.appendChild(textBlock(s.tekst));
+        var pr = el('div', 'pair' + (imgs.length === 1 ? ' pair--single' : '') + (s.breedEerste ? ' pair--lead' : '') + (!s.tekst ? ' pair--first' : ''));
         imgs.forEach(function (b, k) {
           rev(f = figure(b, { fit: s.layout === 'tekeningen' ? 'contain' : null }), k * 120);
           pr.appendChild(f);
         });
         c.appendChild(pr);
+        sec.appendChild(c);
+        break;
+      }
+      case 'galerij': {
+        c = el('div', 'container');
+        if (s.label) c.appendChild(labelBlock(s.label));
+        var gl = el('div', 'gallery gallery--plain');
+        imgs.forEach(function (b, k) { gl.appendChild(rev(figure(b), (k % 2) * 120)); });
+        c.appendChild(gl);
         sec.appendChild(c);
         break;
       }
@@ -234,18 +236,18 @@
         }
         if (s.layout === 'slot' && p.galerij && p.galerij.length) {
           var gc = el('div', 'container');
-          var gl = el('div', 'gallery');
-          p.galerij.forEach(function (b, k) { gl.appendChild(rev(figure(b), (k % 2) * 120)); });
-          gc.appendChild(gl);
+          var gl2 = el('div', 'gallery');
+          p.galerij.forEach(function (b, k) { gl2.appendChild(rev(figure(b), (k % 2) * 120)); });
+          gc.appendChild(gl2);
           sec.appendChild(gc);
         }
         break;
       }
-      default: { /* split, split-rev, sticky, donker */
+      default: { /* split, split-rev, sticky, stapel, donker */
         c = el('div', 'container');
         g = el('div', 'grid');
-        mc = rev(el('div', 'scene__media'));
-        imgs.forEach(function (b) { mc.appendChild(figure(b)); });
+        mc = el('div', 'scene__media');
+        imgs.forEach(function (b, k) { mc.appendChild(rev(figure(b), k ? 80 : 0)); });
         if (s.layout === 'sticky') { g.appendChild(mc); g.appendChild(textBlock(s.tekst)); }
         else { g.appendChild(textBlock(s.tekst)); g.appendChild(mc); }
         c.appendChild(g);
@@ -321,7 +323,7 @@
     nt.appendChild(el('span', 'ttl', nx.titel));
     tx.appendChild(nt);
     link.appendChild(tx);
-    link.appendChild(figure({ src: nx.hero.src, alt: nx.hero.alt, ratio: '16/10', w: 1600, h: 1000, zoom: false }, { nocap: true }));
+    link.appendChild(figure({ src: nx.hero.src, alt: nx.hero.alt, crop: '16/10', w: nx.hero.w || 1600, h: nx.hero.h || 1000, zoom: false }, { nocap: true }));
     nc.appendChild(rev(link));
     var back = el('a', 'link back', '← Terug naar projecten');
     back.href = 'index.html#projecten';
@@ -436,6 +438,42 @@
     }, { passive: true });
   }
 
+
+  /* ---------- contactformulier (verzonden via formsubmit.co) ---------- */
+  function initForm() {
+    var form = $('#contact-form');
+    if (!form) return;
+    var status = $('.form__status', form);
+    var btn = $('button[type="submit"]', form);
+    function say(msg, ok) {
+      status.textContent = msg;
+      status.className = 'form__status label ' + (ok ? 'is-ok' : 'is-err');
+    }
+    form.addEventListener('submit', function (e) {
+      if (!window.fetch || !window.FormData) return; /* zonder JS/fetch: gewone verzending */
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var data = new FormData(form);
+      if (data.get('_honey')) return; /* bot */
+      btn.disabled = true;
+      say('Bezig met verzenden…', true);
+      fetch(form.getAttribute('data-ajax'), { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (res.ok && (res.j.success === true || res.j.success === 'true')) {
+            form.reset();
+            say('Bedankt! Je bericht is verzonden. Ik neem snel contact met je op.', true);
+          } else {
+            throw new Error('mislukt');
+          }
+        })
+        .catch(function () {
+          say('Verzenden is niet gelukt. Stuur me gerust rechtstreeks een e-mail.', false);
+        })
+        .then(function () { btn.disabled = false; });
+    });
+  }
+
   /* ---------- start ---------- */
   function init() {
     try {
@@ -448,6 +486,7 @@
       initReveal();
       initProgress();
       initLightbox();
+      initForm();
     } catch (err) {
       $$('.reveal').forEach(function (e) { e.classList.add('in'); });
       if (window.console) console.error(err);

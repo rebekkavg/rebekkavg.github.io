@@ -5,22 +5,25 @@
    Per project:  slug (URL: project.html?p=slug), nummer, titel, vak, instelling,
                  jaar, type, locatie, beschrijving, hero, kaart (afbeelding op de startpagina),
                  kaartLabel (optioneel, vervangt 'type' op de startpaginakaart),
-                 scenes[], galerij[] (optioneel)
+                 scenes[]
 
-   Per scène:    layout + tekst + beelden[]
-   Layouts:      'paar'        tekst, daarna twee beelden naast elkaar
-                 'tekeningen'  zoals 'paar', maar beelden volledig getoond (plannen/snedes)
+   Per scène:    layout + tekst + beelden[]   (+ optioneel: donker: true, label: 'Kleine kop')
+   Layouts:      'paar'        tekst, daarna beelden naast elkaar
+                 'tekeningen'  zoals 'paar', maar beelden volledig getoond (plannen/snedes);
+                               met breedEerste: true loopt het eerste beeld over de volle breedte
                  'split'       tekst links, beeld rechts
                  'split-rev'   beeld links, tekst rechts
                  'sticky'      beeld blijft staan terwijl de tekst scrolt (desktop)
+                 'stapel'      tekst blijft staan terwijl de beelden eronder/ernaast scrollen
                  'bleed'       beeld over de volle breedte, tekst eronder
                  'bleed-over'  beeld over de volle breedte, tekst in wit vlak erover
-                 'donker'      donkere sectie (#36455B), tekst + beeld
-                 'slot'        groot slotbeeld, tekst eronder, daarna de galerij
+                 'donker'      zoals 'split', maar donker
+                 'galerij'     enkel beelden in kolommen (geen tekst), bv. extra foto's
+   donker: true  maakt van elke scène een donkerblauwe sectie (#36455B)
 
-   Per beeld:    src, alt (beschrijving, Nederlands), ratio ('4/3', '3/2', '2/3' ...),
-                 fit ('cover' of 'contain'), bijschrift, credit (true = "© Rebekka Groeneveld"),
-                 pos (optioneel: object-position, bv. 'center 70%'), zoom (false = geen lightbox)
+   Per beeld:    src, alt (beschrijving, Nederlands), w, h (pixelmaten van het bestand),
+                 bijschrift, credit (true = "© Rebekka Groeneveld"),
+                 fit ('cover' of 'contain'), pos (optioneel: object-position), zoom (false = geen lightbox)
    ========================================================================== */
 window.PROJECTS = [
   {
@@ -29,58 +32,50 @@ window.PROJECTS = [
     titel: 'Samenleven in Rust',
     vak: 'Ontwerpstudio 1: Componenten & Composities',
     instelling: 'Universiteit Antwerpen',
-    jaar: '2025–2026',
+    jaar: '2024–2025',
     type: 'Studentenhuis voor vier internationale studenten',
     locatie: 'Antwerpen, Scheldebocht naast het Droogdokkenpark',
     beschrijving: 'Een studentenhuis voor vier internationale studenten aan de Schelde in Antwerpen: een ontwerp tussen rust en gemeenschap.',
     kaart: { src: 'assets/img/project-1/kaart.webp', alt: 'Houten maquette van het studentenhuis met twee bouwlagen, balkons en een lichte houten gevel.', w: 1000, h: 1334 },
-    hero: {
-      src: 'assets/img/project-1/00-hoofdbeeld-eindresultaat.webp',
-      alt: 'Render van het studentenhuis: een wit volume op twee niveaus met balkons, in een grasachtig landschap onder een zachte lucht.',
-      ratio: '3/2', w: 970, h: 618, credit: true
-    },
+    hero: { src: 'assets/img/project-1/00-hoofdbeeld-schelde.webp', alt: 'Foto van de Schelde met riet en een houten steiger op de voorgrond en de skyline op de achtergrond.', w: 1800, h: 1200, credit: true },
     scenes: [
       { layout: 'tekeningen',
-        tekst: 'Het ontwerp vertrekt vanuit een opgegeven draagstructuur: een vast raster van negen vierkanten, verdeeld over twee niveaus. Binnen deze vaste structuur wordt onderzocht hoe ruimte niet alleen functioneel, maar ook als een compositorisch geheel kan worden georganiseerd. De relatie tussen constructie, circulatie en de verschillende gradaties van publiek naar privé vormt daarbij het uitgangspunt. Context, oriëntatie en het kritisch herdenken van het programma van eisen sturen de verdere ontwikkeling van het ontwerp.',
+        tekst: 'Het ontwerp vertrekt vanuit een opgegeven draagstructuur: een vast raster van negen vierkanten, verdeeld over twee niveaus. Binnen deze structuur wordt gezocht naar een evenwicht tussen constructie, circulatie en de overgang van publiek naar privé. Context, oriëntatie en een kritische herwerking van het programma van eisen sturen de verdere ontwikkeling.',
         beelden: [
-          { src: 'assets/img/project-1/01-grid-bovenaanzicht.webp', alt: 'Bovenaanzicht van het opgegeven raster van negen vierkanten.', bijschrift: 'Opgegeven raster, bovenaanzicht', ratio: '1/1', w: 527, h: 521 },
-          { src: 'assets/img/project-1/02-grid-isometrie.webp', alt: 'Isometrie van de opgegeven draagstructuur verdeeld over twee niveaus.', bijschrift: 'Opgegeven raster, isometrie', ratio: '1/1', w: 364, h: 355 }
+          { src: 'assets/img/project-1/01-grid-bovenaanzicht.webp', alt: 'Bovenaanzicht van het opgegeven raster van negen vierkanten.', bijschrift: 'Opgegeven raster, bovenaanzicht', w: 527, h: 521 },
+          { src: 'assets/img/project-1/02-grid-isometrie.webp', alt: 'Isometrie van de opgegeven draagstructuur verdeeld over twee niveaus.', bijschrift: 'Opgegeven raster, isometrie', w: 364, h: 355 }
         ] },
-      { layout: 'sticky',
-        tekst: 'De locatie bevindt zich naast het Droogdokkenpark, een levendige plek waar buurtbewoners, toeristen en evenementen samenkomen. De industriële geschiedenis van het havengebied staat er naast recente stadsontwikkelingen en vormt een gelaagde context voor het ontwerp. De langgerekte site volgt een duidelijke noord-zuidoriëntatie, met de Schelde aan de westzijde en de stad aan de oostzijde.',
+      { layout: 'stapel', donker: true,
+        tekst: 'De locatie naast het Droogdokkenpark vormt een gelaagde context waarin de industriële geschiedenis van het havengebied en recente stadsontwikkelingen samenkomen. De langgerekte site volgt een noord-zuidoriëntatie, met de Schelde aan de westzijde en de stad aan de oostzijde. Het ontwerp speelt hierop in door zich enerzijds te openen naar het water en de zonsondergang, en anderzijds naar de stad en de ochtendzon. Panoramische zichten op de Schelde, de skyline en de haven maken het landschap tot een actief onderdeel van het wonen.',
         beelden: [
-          { src: 'assets/img/project-1/03-maquette-buitenaanzicht.webp', alt: 'Houten maquette van het studentenhuis in buitenaanzicht, met twee bouwlagen en omlopende balkons.', bijschrift: 'Maquette, buitenaanzicht', credit: true, ratio: '3/4', w: 1800, h: 2400 }
-        ] },
-      { layout: 'split-rev',
-        tekst: 'Deze ligging bepaalt in belangrijke mate de beleving van het gebouw. Aan de ene zijde opent het ontwerp zich naar het water en de zonsondergang, aan de andere zijde naar de stad en de ochtendzon. De open ligging zorgt voor panoramische zichten op de Schelde, de skyline en de haven van Antwerpen. Het landschap wordt zo geen achtergrond, maar een actief onderdeel van het wonen.',
-        beelden: [
-          { src: 'assets/img/project-1/04-maquette-lichtinval.webp', alt: 'Maquette van binnenuit: zonlicht valt door een hoog raam op de houten vloer, naast een houten kolom.', bijschrift: 'Maquette, lichtinval', credit: true, ratio: '3/4', w: 1800, h: 2400 }
-        ] },
-      { layout: 'donker',
-        tekst: 'Het studentenhuis is ontworpen voor vier internationale studenten en zoekt naar een evenwicht tussen individueel wonen en gedeeld leven. De vier slaapkamers zijn bewust aan de zijde van de Schelde geplaatst. Iedere kamer krijgt zo een eigen uitzicht en een directe relatie met het water. Licht, rust en oriëntatie vormen de basis van deze private ruimtes.',
-        beelden: [
-          { src: 'assets/img/project-1/05-maquette-vide.webp', alt: 'Maquette met zicht over de vide en een houten kolom, met een leuning en ramen op het bovenniveau.', bijschrift: 'Maquette, bovenniveau en vide', credit: true, ratio: '3/4', w: 1800, h: 2400 }
+          { src: 'assets/img/project-1/03-implanting.webp', alt: 'Luchtfoto in zwart-wit van de site naast het Droogdokkenpark en de Schelde, met de implanting van het gebouw.', bijschrift: 'Implanting van het studentenhuis', w: 877, h: 877 },
+          { src: 'assets/img/project-1/04-schelde-uitzicht.webp', alt: 'Foto van de Schelde met de kaai en de skyline van Antwerpen onder een bewolkte lucht.', bijschrift: 'Uitzicht op de Schelde', credit: true, w: 1280, h: 1920 }
         ] },
       { layout: 'split',
-        tekst: 'Daartegenover staan de gemeenschappelijke ruimtes. Keuken, living en terras vormen samen het sociale hart van het studentenhuis. Ze zijn zo georganiseerd dat ontmoeting vanzelfsprekend wordt, zonder dat de individuele ruimte volledig verdwijnt. De circulatie verbindt de verschillende ruimtes en maakt geleidelijke overgangen mogelijk tussen samen zijn en afzondering.',
+        tekst: 'Het studentenhuis biedt plaats aan vier internationale studenten en zoekt naar een evenwicht tussen individueel wonen en gedeeld leven. De vier slaapkamers liggen aan de zijde van de Schelde en krijgen elk een eigen uitzicht. Daartegenover vormen de keuken, living en het terras samen het sociale hart van het gebouw, waar ontmoeting centraal staat zonder de individuele rust te verliezen.',
         beelden: [
-          { src: 'assets/img/project-1/06-maquette-trap-tafel.webp', alt: 'Maquette van de gemeenschappelijke ruimte met een ronde houten tafel, een trap en de multifunctionele kast.', bijschrift: 'Maquette, gemeenschappelijke ruimte', credit: true, ratio: '3/4', w: 1800, h: 2400 }
+          { src: 'assets/img/project-1/05-maquette-buitenzicht.webp', alt: 'Houten maquette van het studentenhuis in buitenaanzicht, met twee bouwlagen en balkons.', bijschrift: 'Maquette, buitenzicht', credit: true, w: 1800, h: 2400 }
         ] },
-      { layout: 'tekeningen',
-        tekst: 'Een centrale vide versterkt deze ruimtelijke gelaagdheid. De ruimte verbindt de verschillende niveaus en maakt contact tussen de bewoners mogelijk, terwijl ze tegelijk afstand en overzicht creëert. Ook de multifunctionele kast werkt als een ruimtelijk element dat verschillende sferen van elkaar scheidt zonder ze volledig af te sluiten. Zo ontstaat geen harde grens tussen collectief en privé, maar een reeks tussenzones.',
+      { layout: 'split-rev', donker: true,
+        tekst: 'Een centrale vide verbindt de twee niveaus en versterkt het contact tussen de bewoners. De multifunctionele kast werkt als een ruimtelijk element dat verschillende sferen van elkaar scheidt zonder ze volledig af te sluiten. Samen met de circulatie ontstaan geleidelijke overgangen tussen samen zijn en afzondering, in plaats van een harde grens tussen collectief en privé.',
         beelden: [
-          { src: 'assets/img/project-1/07-snede-aa.webp', alt: 'Lijntekening van snede AA\u2019 door het studentenhuis met de twee niveaus en de centrale vide.', bijschrift: 'Snede AA\u2019', ratio: '1279/662', w: 1279, h: 662 }
+          { src: 'assets/img/project-1/06-maquette-vide-kast.webp', alt: 'Maquette van binnenuit met een houten kolom, de multifunctionele kast en de vide.', bijschrift: 'Maquette, vide en multifunctionele kast', credit: true, w: 1800, h: 2400 }
         ] },
-      { layout: 'tekeningen',
-        tekst: 'Het ontwerp probeert daardoor niet simpelweg een verzameling kamers te organiseren, maar een woonomgeving te creëren waarin verschillende vormen van samenleven naast elkaar kunnen bestaan. Openheid wordt afgewisseld met geborgenheid, ontmoeting met afzondering en collectiviteit met individuele rust.',
+      { layout: 'split',
+        tekst: 'Zo ontstaat een woonomgeving waarin openheid en geborgenheid, ontmoeting en afzondering naast elkaar bestaan. De Schelde vormt een constant rustpunt, terwijl de gedeelde ruimtes het dagelijkse leven dragen. Het ontwerp onderzoekt hoe architectuur samenleven kan ondersteunen zonder de individuele behoefte aan rust en privacy uit het oog te verliezen.',
         beelden: [
-          { src: 'assets/img/project-1/08-grondplan-gelijkvloers.webp', alt: 'Lijntekening van het grondplan van het gelijkvloers.', bijschrift: 'Grondplan gelijkvloers', ratio: '1319/1380', w: 1319, h: 1380 },
-          { src: 'assets/img/project-1/09-grondplan-eerste-verdieping.webp', alt: 'Lijntekening van het grondplan van de eerste verdieping.', bijschrift: 'Grondplan eerste verdieping', ratio: '1087/1020', w: 1087, h: 1020 }
+          { src: 'assets/img/project-1/07-render-eindresultaat.webp', alt: 'Render van het studentenhuis: een wit volume op twee niveaus met balkons, in een grasachtig landschap.', bijschrift: 'Render van het studentenhuis', credit: true, w: 970, h: 618 }
         ] },
-      { layout: 'slot',
-        tekst: 'Uiteindelijk draait het project om de vraag hoe architectuur samenleven kan ondersteunen zonder het individu te verliezen. Door de oriëntatie, circulatie en ruimtelijke overgangen zorgvuldig op elkaar af te stemmen, ontstaat een studentenhuis dat zich opent naar zijn omgeving en tegelijk ruimte laat voor terugtrekking. De Schelde wordt daarbij een constant rustpunt, terwijl de gedeelde ruimtes het dagelijkse leven en de ontmoeting tussen de bewoners dragen.',
+      { layout: 'tekeningen', donker: true, label: 'Tekeningen', breedEerste: true,
         beelden: [
-          { src: 'assets/img/project-1/00-hoofdbeeld-eindresultaat.webp', alt: 'Render van het afgewerkte studentenhuis in zijn omgeving.', bijschrift: 'Eindresultaat', credit: true, ratio: '3/2', w: 970, h: 618 }
+          { src: 'assets/img/project-1/10-snede.webp', alt: 'Lijntekening van snede door het studentenhuis met de twee niveaus en de centrale vide.', bijschrift: 'Snede', w: 1279, h: 662 },
+          { src: 'assets/img/project-1/11-grondplan-gelijkvloers.webp', alt: 'Lijntekening van het grondplan van het gelijkvloers.', bijschrift: 'Grondplan gelijkvloers', w: 1319, h: 1380 },
+          { src: 'assets/img/project-1/12-grondplan-eerste-verdieping.webp', alt: 'Lijntekening van het grondplan van de eerste verdieping.', bijschrift: 'Grondplan eerste verdieping', w: 1087, h: 1020 }
+        ] },
+      { layout: 'galerij', label: 'Extra foto\u2019s',
+        beelden: [
+          { src: 'assets/img/project-1/08-maquette-interieur-a.webp', alt: 'Maquette van het interieur met een ronde tafel, een trap en de multifunctionele kast.', bijschrift: 'Maquette, interieur', credit: true, w: 1800, h: 2400 },
+          { src: 'assets/img/project-1/08-maquette-interieur-b.webp', alt: 'Maquette van het interieur met een houten kolom, een leuning en de vide.', bijschrift: 'Maquette, interieur', credit: true, w: 1800, h: 2400 }
         ] }
     ]
   },
@@ -88,66 +83,52 @@ window.PROJECTS = [
   {
     slug: 'onder-invloed-van-kunst',
     nummer: '02',
-    titel: 'Onder invloed van Kunst',
+    titel: 'Onder Invloed van Kunst',
     vak: 'Ontwerpstudio: Interieur als Gedeelde Ruimte',
     instelling: 'Universiteit Antwerpen',
     jaar: '2025–2026',
     type: 'Paviljoen voor kunst, natuur en welzijn',
     locatie: 'Antwerpen, Middelheimpark',
-    beschrijving: 'Een paviljoen in het Middelheimpark in Antwerpen waar kijken, maken en ontmoeten samenkomen: een gedeelde ruimte die kunst inzet als aanleiding voor creativiteit.',
-    kaart: { src: 'assets/img/project-2/kaart.webp', alt: 'Maquette van het paviljoen met een donkere, rood-bruine houten gevel en een groot venster met zwart kader.', w: 1000, h: 1333 },
-    hero: {
-      src: 'assets/img/project-2/00-hoofdbeeld.webp',
-      alt: 'Render van het interieur van het paviljoen: een houten skelet met zichtbare balken, linnen gordijnen en een bezoeker aan een lange tafel bij het raam.',
-      ratio: '16/9', w: 1800, h: 1012, credit: true
-    },
+    beschrijving: 'Een paviljoen in het Middelheimpark in Antwerpen waar kunst, natuur en creativiteit samenkomen.',
+    kaart: { src: 'assets/img/project-2/kaart.webp', alt: 'Maquette van het paviljoen met een donkere, rood-bruine houten gevel en grote vensters.', w: 1000, h: 1333 },
+    hero: { src: 'assets/img/project-2/00-hoofdbeeld.webp', alt: 'Foto van beelden in het Middelheimpark op een grasveld onder een bewolkte lucht.', w: 1800, h: 1350, credit: true },
     scenes: [
-      { layout: 'split',
-        tekst: 'Het ontwerp vertrekt vanuit de vraag hoe een gedeelde ruimte mensen kan inspireren om zelf creatief aan de slag te gaan. Binnen de ontwerpstudio Interieur als Gedeelde Ruimte wordt onderzocht hoe interieurs kunnen inspelen op verschillende gebruikers, activiteiten en vormen van samenleven. Voor deze opdracht wordt een paviljoen ontworpen in het Middelheimpark in Antwerpen: een derde plek waar welzijn, kunst en natuur elkaar ontmoeten.',
+      { layout: 'paar',
+        tekst: 'Kunst inspireert. Vanuit die gedachte ontstaat in het Middelheimpark een paviljoen waar kunst, natuur en creativiteit samenkomen. Een plek waar bezoekers niet alleen kijken, maar ook onder invloed van kunst hun eigen creatieve proces ontdekken.',
         beelden: [
-          { src: 'assets/img/project-2/01-paviljoen-voorgevel.webp', alt: 'Render van de voorgevel van het paviljoen: een donker houten volume met een groot venster en een boom ervoor.', bijschrift: 'Paviljoen, voorgevel', credit: true, ratio: '16/9', w: 1800, h: 1012 }
+          { src: 'assets/img/project-2/01-kunst.webp', alt: 'Foto van een beeldhouwwerk in het Middelheimpark met kale bomen op de achtergrond.', bijschrift: 'Middelheimpark, kunstwerk', credit: true, w: 1400, h: 1867 },
+          { src: 'assets/img/project-2/02-interieur.webp', alt: 'Render van het interieur van het paviljoen met houten balken, een linnen gordijn en een tafel bij het raam.', bijschrift: 'Interieur van het paviljoen', credit: true, w: 1800, h: 1012 }
         ] },
-      { layout: 'sticky',
-        tekst: 'De omgeving vormt het vertrekpunt van het ontwerp. Tijdens een bezoek aan het Middelheimpark wordt de wisselwerking tussen kunst en natuur onderzocht. De aanwezige kunstwerken gaan voortdurend een relatie aan met hun omgeving. Ze nodigen bezoekers uit om stil te staan, te kijken en de ruimte op een andere manier te ervaren. Die wisselwerking vormt de basis voor het concept van het paviljoen.',
+      { layout: 'stapel', donker: true,
+        tekst: 'Geïnspireerd door het depot vormt een raster de basis van het ontwerp. Het structureert het paviljoen en bepaalt zowel de constructie als de ruimtelijke indeling. Binnen deze heldere structuur ontstaan verschillende ruimtes die uitnodigen tot observeren, experimenteren en ontmoeten.',
         beelden: [
-          { src: 'assets/img/project-2/02-paviljoen-zijgevel.webp', alt: 'Render van de zijgevel van het paviljoen met een persoon achter het raam en een boom aan de rechterkant.', bijschrift: 'Paviljoen, zijgevel', credit: true, ratio: '16/9', w: 1800, h: 1012 }
-        ] },
-      { layout: 'donker',
-        tekst: 'Kunst inspireert. Vanuit die gedachte ontstaat een plek waar bezoekers niet alleen kunst kunnen beleven, maar ook hun eigen creatieve proces kunnen ontdekken. Het paviljoen biedt ruimte om te observeren, te experimenteren en ideeën uit te wisselen. Zo wordt het niet enkel een plek om samen te komen, maar ook een omgeving die uitnodigt tot persoonlijke ontwikkeling en creativiteit.',
-        beelden: [
-          { src: 'assets/img/project-2/03-interieur-gordijnen.webp', alt: 'Render van het interieur met houten balken, een semi-transparant linnen gordijn en een lange tafel met uitzicht op het park.', bijschrift: 'Interieur, gordijnen en daglicht', credit: true, ratio: '16/9', w: 1800, h: 1012 }
-        ] },
-      { layout: 'split-rev',
-        tekst: 'De vormgeving vertrekt vanuit een raster, geïnspireerd op het depot. Dit raster vormt de rode draad doorheen het volledige ontwerp en bepaalt zowel de constructieve opbouw als de ruimtelijke organisatie. Het zorgt voor een duidelijke structuur waarbinnen verschillende ruimtes en functies een plaats krijgen. Van de eerste vormstudies tot de technische uitwerking blijft het raster richting geven aan de ontwerpbeslissingen.',
-        beelden: [
-          { src: 'assets/img/project-2/04-maquette-raster.webp', alt: 'Bovenaanzicht van de maquette: een houten raster met vakken, kurkvloer en enkele planten.', bijschrift: 'Maquette, bovenaanzicht van het raster', credit: true, ratio: '1/1', w: 1600, h: 1600 }
+          { src: 'assets/img/project-2/03-park-beeld.webp', alt: 'Zwart-witfoto van beelden in het Middelheimpark tussen de bomen.', bijschrift: 'Middelheimpark, beelden en natuur', credit: true, w: 1400, h: 1400 },
+          { src: 'assets/img/project-2/04-maquette-raster.webp', alt: 'Bovenaanzicht van de maquette: een houten raster met vakken, kurkvloer en enkele planten.', bijschrift: 'Maquette, bovenaanzicht van het raster', credit: true, w: 1600, h: 1600 }
         ] },
       { layout: 'paar',
-        tekst: 'Een houten skelet vormt de basis van het paviljoen. Europees douglas en OSB maken de structuur zichtbaar en geven het geheel een warme, eerlijke uitstraling. De semi-transparante linnen gordijnen brengen een tweede laag in het ontwerp. Ze laten het daglicht door, maar bieden tegelijk de mogelijkheid om ruimtes flexibel af te bakenen. Hierdoor ontstaat een omgeving die zich aanpast aan verschillende activiteiten en gradaties van openheid.',
+        tekst: 'Een houten skelet in Europees douglas en OSB geeft het paviljoen zijn warme, natuurlijke karakter. Semi-transparante linnen gordijnen brengen zachtheid in het geheel en maken de ruimte flexibel. Ze filteren het licht en laten toe om verschillende zones af te bakenen zonder de openheid te verliezen.',
         beelden: [
-          { src: 'assets/img/project-2/05-maquette-gordijn.webp', alt: 'Maquette van binnenuit met houten skelet en een hangend linnen gordijn dat de ruimte afbakent.', bijschrift: 'Maquette, linnen gordijn', credit: true, ratio: '3/4', w: 1600, h: 2133 },
-          { src: 'assets/img/project-2/06-maquette-venster.webp', alt: 'Maquette met zicht op een groot venster, een plant op de voorgrond en een houten balkenplafond.', bijschrift: 'Maquette, zicht naar buiten', credit: true, ratio: '3/4', w: 1600, h: 2134 }
+          { src: 'assets/img/project-2/05-maquette-gordijn.webp', alt: 'Maquette van binnenuit met houten skelet en hangende linnen gordijnen.', bijschrift: 'Maquette, linnen gordijnen', credit: true, w: 1600, h: 2133 },
+          { src: 'assets/img/project-2/06-maquette-venster.webp', alt: 'Maquette met zicht op een groot venster, een plant op de voorgrond en een houten balkenplafond.', bijschrift: 'Maquette, zicht naar buiten', credit: true, w: 1600, h: 2134 }
         ] },
-      { layout: 'tekeningen',
-        tekst: 'In de technische tekeningen wordt het raster verder vertaald naar constructie en detail. Plannen, snedes en aansluitingen tonen hoe de verschillende onderdelen samen één coherent geheel vormen. De maquette maakt vervolgens de stap van tekening naar ruimte. Ze brengt de verhouding tussen structuur, licht en gebruik tastbaar in beeld en maakt duidelijk hoe het concept zich vertaalt naar een fysieke omgeving.',
+      { layout: 'stapel', donker: true,
+        tekst: 'Van constructie tot interieur blijft het raster de verbindende factor. Het resultaat is een paviljoen waar structuur en materialiteit samen een omgeving creëren die ruimte laat voor creativiteit. Een plek waar kunst niet alleen wordt bekeken, maar ook aanzet tot iets nieuws.',
         beelden: [
-          { src: 'assets/img/project-2/07-grondplan.webp', alt: 'Lijntekening van het grondplan van het paviljoen met het raster, de tafels en de ingang.', bijschrift: 'Grondplan', ratio: '1210/817', w: 1210, h: 817 },
-          { src: 'assets/img/project-2/08-snede.webp', alt: 'Lijntekening van snede AA\u2019 door het paviljoen met het houten skelet en de tafels.', bijschrift: 'Snede AA\u2019', ratio: '1035/347', w: 1035, h: 347 }
+          { src: 'assets/img/project-2/07-interieur-werktafel.webp', alt: 'Render van het interieur met een lange houten werktafel, linnen gordijnen en uitzicht op het park.', bijschrift: 'Interieur, werktafel', credit: true, w: 1800, h: 1012 },
+          { src: 'assets/img/project-2/08-maquette-gevel.webp', alt: 'Maquette van het paviljoen met een rood-bruine houten gevel en een groot venster met een plant erachter.', bijschrift: 'Maquette, gevel', credit: true, w: 1600, h: 2134 }
         ] },
-      { layout: 'bleed',
-        tekst: 'Het uiteindelijke paviljoen brengt kijken, maken en ontmoeten samen. De combinatie van een heldere structuur, natuurlijke materialen en flexibele afscheidingen creëert een plek waar verschillende vormen van gebruik naast elkaar kunnen bestaan. Openheid en geborgenheid wisselen elkaar af, waardoor bezoekers zowel samen als individueel aan de slag kunnen.',
+      { layout: 'tekeningen', label: 'Tekeningen', breedEerste: true,
         beelden: [
-          { src: 'assets/img/project-2/09-interieur-werktafel.webp', alt: 'Render van het interieur met een lange houten werktafel, linnen gordijnen en een raam met zicht op het park.', bijschrift: 'Interieur, werktafel', credit: true, ratio: '16/9', w: 1800, h: 1012 }
+          { src: 'assets/img/project-2/10-snede.webp', alt: 'Lijntekening van de snede door het paviljoen met het houten skelet en de tafels.', bijschrift: 'Snede', w: 1035, h: 347 },
+          { src: 'assets/img/project-2/09-grondplan.webp', alt: 'Lijntekening van het grondplan van het paviljoen met het raster, de tafels en de ingang.', bijschrift: 'Grondplan', w: 1210, h: 817 }
         ] },
-      { layout: 'slot',
-        tekst: 'Het project onderzoekt hoe architectuur kunst kan inzetten als aanleiding voor creativiteit en ontmoeting. Door een gedeelde ruimte te ontwerpen waarin observeren, maken en uitwisselen centraal staan, wordt het paviljoen een plek die niet alleen uitnodigt om kunst te ervaren, maar ook om er zelf iets uit voort te brengen.',
+      { layout: 'galerij', donker: true, label: 'Extra foto\u2019s',
         beelden: [
-          { src: 'assets/img/project-2/10-maquette-totaal.webp', alt: 'Maquette van het paviljoen met een donkere, rood-bruine gevel en een groot venster op een witte ondergrond.', bijschrift: 'Maquette, het paviljoen', credit: true, ratio: '16/9', w: 2000, h: 1125 }
+          { src: 'assets/img/project-2/14-interieur-gordijnen.webp', alt: 'Render van het interieur met linnen gordijn en een lange tafel bij het raam.', bijschrift: 'Interieur, gordijnen', credit: true, w: 1800, h: 1012 },
+          { src: 'assets/img/project-2/11-gevel-links.webp', alt: 'Render van de gevel van het paviljoen met een persoon achter het raam en een boom rechts.', bijschrift: 'Gevel', credit: true, w: 1800, h: 1012 },
+          { src: 'assets/img/project-2/12-gevel-boom.webp', alt: 'Render van de gevel van het paviljoen met een boom voor het raam.', bijschrift: 'Gevel met boom', credit: true, w: 1800, h: 1012 },
+          { src: 'assets/img/project-2/13-maquette-totaal.webp', alt: 'Maquette van het paviljoen met een donkere gevel en een zwarte oprit op een witte ondergrond.', bijschrift: 'Maquette, paviljoen', credit: true, w: 1600, h: 2134 }
         ] }
-    ],
-    galerij: [
-      { src: 'assets/img/project-2/11-maquette-buitenaanzicht.webp', alt: 'Maquette van het paviljoen in buitenaanzicht met een plant achter het grote venster.', bijschrift: 'Maquette, buitenaanzicht', credit: true, ratio: '3/4', w: 1600, h: 2134 },
-      { src: 'assets/img/project-2/12-maquette-gevel.webp', alt: 'Maquette van het paviljoen met de donkere gevel, het venster en de ingang met een zwarte oprit.', bijschrift: 'Maquette, gevel en ingang', credit: true, ratio: '3/4', w: 1600, h: 2134 }
     ]
   },
 
@@ -157,10 +138,10 @@ window.PROJECTS = [
     nummer: '03',
     titel: 'Project 3',
     kaart: null,
-    kaartLabel: 'Nog te bepalen',
+    kaartLabel: 'Coming soon!',
     vak: 'Vak of studio (placeholder)',
     instelling: 'Universiteit Antwerpen',
-    jaar: '2025–2026',
+    jaar: '2026–2027',
     type: 'Type project (placeholder)',
     locatie: 'Locatie (placeholder)',
     beschrijving: 'Placeholder voor project 3 van Rebekka Groeneveld.',

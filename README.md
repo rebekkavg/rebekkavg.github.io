@@ -28,35 +28,11 @@ Ontbrekende afbeeldingen verschijnen als grijze (#99a5b5) placeholder met de ver
 
 ## 2. Afbeeldingen
 
-De foto's van project 1 en 2 zijn al verwerkt (WebP, geoptimaliseerd, plannen bijgesneden) en staan in `assets/img/project-1/` en `assets/img/project-2/`. Op de startpagina gebruikt elk project een staande kaartfoto (`kaart.webp`, verhouding 3:4).
+De foto's van project 1 en 2 staan in `assets/img/project-1/` en `assets/img/project-2/` (WebP). Per project staat `kaart.webp` voor de startpagina (staand, verhouding 3:4). Het portret komt in `assets/img/about.jpg`.
 
-**Project 1: Samenleven in Rust** (`assets/img/project-1/`)
+In `js/projects.js` geef je bij elk beeld `src`, `alt`, `w` en `h` (de pixelmaten van het bestand). De site berekent daaruit de verhouding, zodat een beeld nooit wordt afgesneden, ook niet op een telefoon.
 
-| Bestand | Inhoud |
-|---|---|
-| `00-hoofdbeeld-eindresultaat.webp` | render eindresultaat (hoofdbeeld en slotbeeld) |
-| `01-grid-bovenaanzicht.webp`, `02-grid-isometrie.webp` | opgegeven raster |
-| `03-maquette-buitenaanzicht.webp` | maquette buitenaanzicht (scène 2) |
-| `04-maquette-lichtinval.webp` | maquette lichtinval (scène 3) |
-| `05-maquette-vide.webp` | maquette bovenniveau en vide (scène 4) |
-| `06-maquette-trap-tafel.webp` | maquette gemeenschappelijke ruimte (scène 5) |
-| `07-snede-aa.webp` | snede AA' |
-| `08-grondplan-gelijkvloers.webp`, `09-grondplan-eerste-verdieping.webp` | grondplannen |
-| `kaart.webp` | kaartbeeld op de startpagina |
-
-**Project 2: Onder invloed van Kunst** (`assets/img/project-2/`): `00-hoofdbeeld.webp` tot `12-maquette-gevel.webp` en `kaart.webp`; de volgorde staat in `js/projects.js`.
-
-Het portret komt in `assets/img/about.jpg`.
-
-**Het kaartbeeld op de startpagina wijzigen:** vervang `kaart.webp` van dat project, of pas `kaart: { src, alt, w, h }` aan in `js/projects.js`. Staat er `kaart: null`, dan toont de startpagina een grijze placeholder met `kaartLabel` (nu "Nog te bepalen" voor project 3).
-
-**Advies voor snelle laadtijd:**
-- Exporteer foto's en renders als WebP of JPG, maximaal 2400 px breed, kwaliteit 80–85%.
-- Exporteer plannen en snedes als PNG, WebP of SVG.
-- Houd elk bestand onder ongeveer 500 KB.
-- Het eindresultaat van project 1 en de twee rasterafbeeldingen zijn klein (970 px en ca. 500 px breed). Heb je die in hogere resolutie, vervang ze dan onder dezelfde naam (pas `w` en `h` in `js/projects.js` aan).
-
-**Verhoudingen:** elk beeld heeft een `ratio` in `js/projects.js` (bv. `'4/3'`). Past een beeld niet mooi in zijn kader, pas dan enkel die waarde aan (`'3/2'`, `'16/9'`, `'2/3'`, ...). Met `fit: 'contain'` wordt een beeld volledig getoond (handig voor plannen), met `fit: 'cover'` vult het het kader. Met `pos: 'center 70%'` verschuif je het uitgesneden stuk.
+**Advies voor snelle laadtijd:** WebP of JPG, maximaal 2400 px breed, kwaliteit 80–85%, plannen als PNG, WebP of SVG, elk bestand liefst onder ca. 500 KB. Een paar beelden zijn klein (o.a. het eindresultaat van project 1 en de rasterbeelden); vervang ze onder dezelfde naam door een grotere versie als je die hebt (pas `w` en `h` aan).
 
 Een enkel beeld in een `paar`- of `tekeningen`-scène wordt automatisch breder getoond.
 
@@ -69,7 +45,7 @@ Alles staat in `js/projects.js`. Je hoeft geen HTML aan te passen.
 2. Pas `titel`, `vak`, `jaar`, `type`, `locatie` en `beschrijving` aan. Laat `slug` ongewijzigd, tenzij je ook de link in het `<noscript>`-blok van `index.html` aanpast.
 3. Vervang in elke scène `tekst`, `alt` (beschrijving van het beeld) en `bijschrift`.
 4. Zet je afbeeldingen in `assets/img/project-3/` en pas de bestandsnamen (`src`) aan, of geef je bestanden de namen die al in de data staan:
-   `00-hoofdbeeld.jpg`, `01-vertrekpunt.jpg`, `02-plek.jpg`, `03-idee.jpg`, `04-indeling.jpg`, `04-detail.jpg`, `05-grondplan.png`, `05-snede.png`, `06-eindbeeld.jpg`. Voeg ook een `kaart` toe (zie hierboven) en verwijder `kaartLabel`.
+   `00-hoofdbeeld.jpg`, `01-vertrekpunt.jpg`, `02-plek.jpg`, `03-idee.jpg`, `04-indeling.jpg`, `04-detail.jpg`, `05-grondplan.png`, `05-snede.png`, `06-eindbeeld.jpg`. Voeg ook een `kaart` toe (zie hierboven) en verwijder `kaartLabel` (nu "Coming soon!").
 5. Houd de verhaallogica aan: vertrekpunt → plek/context → idee → indeling → detail → tekeningen → eindbeeld. Scènes toevoegen of verwijderen mag. De teller ("01 / 06") past zich automatisch aan.
 
 **Een vierde project toevoegen**
@@ -86,11 +62,26 @@ Kopieer een volledig projectblok, plak het achter het laatste (met een komma ert
 | `bleed` | beeld over de volle breedte, tekst eronder |
 | `bleed-over` | beeld over de volle breedte, tekst in een wit vlak erover |
 | `donker` | donkere sectie (#36455B) voor het conceptmoment |
-| `slot` | groot slotbeeld, tekst eronder, daarna de galerij (`galerij`) |
+| `stapel` | tekst blijft staan terwijl de beelden ernaast scrollen (desktop) |
+| `galerij` | enkel beelden in kolommen, bv. voor extra foto's (geen tekst) |
+| `slot` | groot slotbeeld, tekst eronder |
+
+Met `donker: true` maak je van elke scène een donkerblauwe sectie, met `label: 'Tekeningen'` zet je een klein label bovenaan, en met `breedEerste: true` loopt het eerste beeld (bv. een snede) over de volle breedte.
 
 Een `tekst` mag een tekenreeks zijn of een lijst van alinea's (`['alinea 1', 'alinea 2']`).
 
-## 4. Publiceren op GitHub Pages
+## 4. Contactformulier
+
+Het formulier op `contact.html` stuurt berichten automatisch naar je mailbox via de gratis dienst [formsubmit.co](https://formsubmit.co) (geen server nodig).
+
+1. Publiceer de site en verstuur zelf één keer een testbericht via het formulier.
+2. FormSubmit stuurt een activatiemail naar `rebekka.groeneveld@student.uantwerpen.be`. Klik op de link daarin. Daarna komen alle berichten rechtstreeks binnen. Controleer ook je spamfolder.
+3. Wijzig je e-mailadres? Pas het aan in `contact.html` (twee keer: `action` en `data-ajax`).
+4. Optioneel: na activatie krijg je van FormSubmit een anoniem alias-adres. Gebruik dat in plaats van je e-mailadres in de formulier-URL, zodat het adres niet in de broncode staat.
+
+Het formulier heeft een verborgen veld tegen spam-bots. Lukt verzenden niet, dan toont de pagina een melding en blijft het e-mailadres zichtbaar ernaast. Het formulier werkt niet vanaf een lokaal bestand (`file://`), enkel op de gepubliceerde site.
+
+## 5. Publiceren op GitHub Pages
 
 1. Maak een repository op GitHub en push alle bestanden (inclusief `.nojekyll`) naar de branch `main`.
 2. Ga naar **Settings → Pages**.
@@ -108,15 +99,16 @@ Een `tekst` mag een tekenreeks zijn of een lijst van alinea's (`['alinea 1', 'al
 
 **Lettertype:** Josefin Sans wordt via Google Fonts geladen. Wil je dat niet (privacy, offline), download het lettertype dan en host het zelf met `@font-face` en `font-display: swap`.
 
-## 5. Nog zelf in te vullen
+## 6. Nog zelf in te vullen
 
 - [ ] Het portret `about.jpg`
 - [ ] Project 3: titel, teksten, beelden, metadata en kaartbeeld
-- [ ] Optioneel: een situatiefoto of -plan voor project 1 (scène 2 en 3) en hoger-resolutie eindbeeld
+- [ ] Contactformulier activeren (zie hoofdstuk 4)
+- [ ] Optioneel: hoger-resolutie eindbeeld van project 1
 - [ ] E-mailadres controleren (`rebekka.groeneveld@student.uantwerpen.be`) in `contact.html`, de footer en het mobiele menu van elke pagina
 - [ ] LinkedIn en Instagram in `contact.html` (nu platte tekst als placeholder)
 - [ ] Software-lijst in `about.html`
-- [ ] Hero-zin in `index.html` (nu "Interieurarchitectuur — projecten 2025–2026")
+- [ ] Hero-zin in `index.html` (nu "Interieurarchitectuur")
 - [ ] Optioneel: `og:image`, eigen domein
 - [ ] `alt`-teksten en bijschriften in `js/projects.js` nalopen
 

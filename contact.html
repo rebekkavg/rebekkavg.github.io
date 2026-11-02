@@ -38,23 +38,42 @@
     <a href="about.html">Over mij</a>
     <a href="contact.html">Contact</a>
   </nav>
-  <p class="label">Antwerpen<br>rebekka.groeneveld@student.uantwerpen.be</p>
+  <p class="label">rebekka.groeneveld@student.uantwerpen.be</p>
 </div>
 <main id="main">
   <section class="container page-head">
-    <p class="label reveal">Antwerpen</p>
+    <p class="label reveal">Rebekka Groeneveld</p>
     <h1 class="display reveal">Contact</h1>
   </section>
   <section class="container contact">
-    <!-- CONTROLEER dit e-mailadres vóór publicatie -->
-    <p class="reveal"><a class="link big-mail" href="mailto:rebekka.groeneveld@student.uantwerpen.be">rebekka.groeneveld@student.uantwerpen.be</a></p>
-    <div class="contact__grid reveal">
-      <div><p class="label">Sociale media</p>
-        <!-- PLACEHOLDER: vervang door <a class="link" href="https://..."> -->
-        <p>LinkedIn — nog in te vullen</p>
-        <p>Instagram — nog in te vullen</p>
+    <div class="contact__layout">
+      <div class="contact__side reveal">
+        <p class="label">E-mail</p>
+        <!-- CONTROLEER dit e-mailadres vóór publicatie -->
+        <p><a class="link big-mail" href="mailto:rebekka.groeneveld@student.uantwerpen.be">rebekka.groeneveld@student.uantwerpen.be</a></p>
+        <div class="contact__grid">
+          <div><p class="label">Sociale media</p>
+            <!-- PLACEHOLDER: vervang door <a class="link" href="https://..."> -->
+            <p>LinkedIn — nog in te vullen</p>
+            <p>Instagram — nog in te vullen</p>
+          </div>
+          <div><p class="label">Studie</p><p>Interieurarchitectuur<br>Universiteit Antwerpen</p></div>
+        </div>
       </div>
-      <div><p class="label">Studie</p><p>Interieurarchitectuur<br>Universiteit Antwerpen</p></div>
+      <!-- Verzending via formsubmit.co: zie README (eenmalige activatie nodig) -->
+      <form class="form reveal" id="contact-form" method="POST" action="https://formsubmit.co/rebekka.groeneveld@student.uantwerpen.be" data-ajax="https://formsubmit.co/ajax/rebekka.groeneveld@student.uantwerpen.be">
+        <p class="label">Laat je gegevens achter</p>
+        <div class="field"><label for="f-naam" class="label">Naam</label><input id="f-naam" name="naam" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="f-mail" class="label">E-mailadres</label><input id="f-mail" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="f-tel" class="label">Telefoonnummer (optioneel)</label><input id="f-tel" name="telefoon" type="tel" autocomplete="tel"></div>
+        <div class="field"><label for="f-bericht" class="label">Bericht</label><textarea id="f-bericht" name="bericht" rows="5" required></textarea></div>
+        <input type="text" name="_honey" class="form__honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_subject" value="Nieuw bericht via R.V.G portfolio">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <button class="btn" type="submit">Verstuur</button>
+        <p class="form__status label" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </section>
 </main>
@@ -66,7 +85,6 @@
     </div>
     <div class="site-footer__grid">
       <div><p class="label">Contact</p><a class="link" href="mailto:rebekka.groeneveld@student.uantwerpen.be">rebekka.groeneveld@student.uantwerpen.be</a></div>
-      <div><p class="label">Tijd</p><p data-clock>Antwerpen</p></div>
       <div><p class="label">Navigatie</p><p class="site-footer__nav"><a class="link" href="index.html#projecten">Projecten</a> <a class="link" href="about.html">Over mij</a> <a class="link" href="contact.html">Contact</a></p></div>
     </div>
     <p class="site-footer__copy label">&copy; <span data-year>2026</span> Rebekka Groeneveld</p>

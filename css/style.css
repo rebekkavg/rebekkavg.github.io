@@ -36,7 +36,7 @@ a{color:inherit}
 b{font-weight:700}
 
 :focus-visible{outline:2px solid var(--blue-mid);outline-offset:3px}
-.scene--donker :focus-visible,.site-footer :focus-visible,.mobile-menu :focus-visible,.lb :focus-visible{outline-color:var(--white)}
+.is-dark :focus-visible,.site-footer :focus-visible,.mobile-menu :focus-visible,.lb :focus-visible{outline-color:var(--white)}
 
 .container{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
 
@@ -258,6 +258,8 @@ b{font-weight:700}
 .scene__media .fig--tall .media{width:min(100%,calc(78svh * var(--rn,.75)))}
 @media (min-width:900px){
   .scene--split .grid,.scene--donker .grid{grid-template-columns:5fr 7fr}
+  .scene--stapel .grid{grid-template-columns:5fr 7fr;align-items:start}
+  .scene--stapel .scene__text{position:sticky;top:calc(var(--header-h) + 2rem)}
   .scene--split-rev .grid{grid-template-columns:7fr 5fr}
   .scene--split-rev .scene__text{order:2}
   .scene--sticky .grid{grid-template-columns:7fr 5fr;align-items:start}
@@ -288,9 +290,10 @@ b{font-weight:700}
 .scene--slot .scene__text p{font-size:clamp(1.25rem,2.2vw,1.75rem);line-height:1.6}
 
 /* donker conceptmoment */
-.scene--donker{background:var(--blue-deep);color:var(--white)}
-.scene--donker::before{border-color:rgba(255,255,255,.35)}
-.scene--donker .cap,.scene--donker .label{color:rgba(255,255,255,.78)}
+.scene--donker,.scene.is-dark{background:var(--blue-deep);color:var(--white)}
+.scene.is-dark::before{border-color:rgba(255,255,255,.35)}
+.scene.is-dark .cap,.scene.is-dark .label{color:rgba(255,255,255,.78)}
+.scene.is-dark .media.is-missing{background:var(--blue-mid)}
 
 /* galerij */
 .gallery{margin-top:clamp(4rem,9vw,8rem);padding-top:clamp(2rem,5vw,4rem);border-top:var(--hair);columns:1;column-gap:clamp(1rem,3vw,3rem)}
@@ -320,7 +323,7 @@ b{font-weight:700}
 .site-footer__grid p.label{margin-bottom:.35rem}
 .site-footer__nav{display:flex;flex-wrap:wrap;gap:.25rem 1.5rem}
 .site-footer__copy{padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.3)}
-@media (min-width:600px){.site-footer__grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:600px){.site-footer__grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ---------- lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:100;background:rgba(54,69,91,.97);color:var(--white);display:none;flex-direction:column}
@@ -348,6 +351,56 @@ b{font-weight:700}
   .lb__stage{padding:0 .75rem}
   .lb__nav{top:auto;bottom:.6rem;transform:none}
 }
+
+
+/* ---------- stapel, galerij, tekeningen ---------- */
+.scene__label{margin-bottom:clamp(1.5rem,4vw,3rem)}
+.pair--first{margin-top:0}
+.pair--lead>:first-child{grid-column:1/-1}
+.pair--lead{align-items:start}
+.pair--lead>:nth-child(2){margin-top:0!important}
+.pair .fig--tall .media{width:min(100%,calc(80svh * var(--rn,.75)))}
+.scene__media{align-content:start}
+.gallery--plain{margin-top:0;padding-top:0;border-top:0}
+.scene--galerij{padding-block:clamp(3rem,8vw,7rem)}
+@media (min-width:900px){.gallery--plain{columns:3}}
+/* tekeningen op donker: witte vlakken zodat de lijntekening leesbaar blijft */
+.scene.is-dark.scene--tekeningen .media{background:var(--white)}
+
+/* ---------- contactformulier ---------- */
+.contact__layout{display:grid;gap:clamp(3rem,7vw,6rem);padding-top:clamp(1.5rem,4vw,3rem);border-top:var(--hair)}
+.contact__side .contact__grid{border-top:var(--hair);margin-top:clamp(2rem,5vw,4rem)}
+@media (min-width:900px){.contact__layout{grid-template-columns:7fr 5fr;align-items:start}}
+.contact>p{border-top:0}
+.form{display:grid;gap:1.5rem}
+.field{display:grid;gap:.35rem}
+.field input,.field textarea{
+  font:inherit;font-weight:300;font-size:1.0625rem;color:var(--blue-deep);background:var(--white);
+  border:0;border-bottom:1px solid var(--blue-soft);border-radius:0;padding:.6rem 0;width:100%;
+  transition:border-color .25s;
+}
+.field textarea{resize:vertical;min-height:8rem;border:1px solid var(--blue-soft);padding:.75rem}
+.field input:hover,.field textarea:hover{border-color:var(--blue-mid)}
+.field input:focus,.field textarea:focus{outline:2px solid var(--blue-mid);outline-offset:3px;border-color:var(--blue-mid)}
+.form__honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.btn{
+  justify-self:start;font:inherit;font-size:.75rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;
+  min-height:48px;padding:.6rem 2rem;color:var(--white);background:var(--blue-deep);border:1px solid var(--blue-deep);
+  cursor:pointer;transition:background .25s,color .25s;
+}
+.btn:hover:not(:disabled){background:var(--white);color:var(--blue-deep)}
+.btn:disabled{opacity:.6;cursor:wait}
+.form__status{min-height:1.6em}
+.form__status.is-err{color:var(--blue-deep);font-weight:700}
+
+/* ---------- mobiel: beelden altijd volledig en op schermbreedte ---------- */
+@media (max-width:899px){
+  .bleed .media{height:auto;aspect-ratio:var(--r,3/2)}
+  .scene__media .fig--tall .media,.pair .fig--tall .media{width:100%}
+  .scene{padding-block:clamp(3rem,10vw,5rem)}
+  .gallery--plain{columns:1}
+}
+@media (min-width:600px) and (max-width:899px){.gallery--plain{columns:2}}
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
